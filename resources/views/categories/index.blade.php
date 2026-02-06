@@ -21,7 +21,7 @@
                     <td>{{ $category->id }}</td>
                     <td>{{ $category->name }}</td>
                     <td>{{ $category->description }}</td>
-                    <td>
+                    <td>    
                         <a href="{{ route('categories.edit', $category) }}" class="btn btn-sm btn-warning">Edit</a>
                         <form action="{{ route('categories.destroy', $category) }}" method="POST" class="d-inline">
                             @csrf
@@ -33,4 +33,6 @@
             @endforeach
         </tbody>
     </table>
+    
 @endsection
+

@@ -6,21 +6,38 @@
         <a href="{{ route('posts.create') }}" class="btn btn-primary">Create Post</a>
     </div>
 
-    @foreach($posts as $post)
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">{{ $post->title }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Category: {{ $post->category->name }}</h6>
-                <p class="card-text">{{ Str::limit($post->content, 150) }}</p>
-                <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-warning">Edit</a>
-                <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                </form>
-            </div>
-        </div>
-    @endforeach
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Content</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($posts as $post)
+                <tr>
+                    <td>{{ $post->id }}</td>
+                    <td>{{ $post->title }}</td>
+                    <td>{{ $post->category->name }}</td>
+                    <td>{{ \Illuminate\Support\Str::limit($post->content, 50) }}</td>
+                    <td>    
+                        <a href="{{ route('posts.show', $post) }}" class="btn btn-sm btn-info">View</a>
+                        <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-warning">Edit</a>
+                        <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+   
 
     {{ $posts->links() }}
 @endsection
+

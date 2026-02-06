@@ -3,7 +3,7 @@
 @section('content')
     <h1>Edit Post</h1>
 
-    <form action="{{ route('posts.update', $post) }}" method="POST">
+    <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -20,10 +20,40 @@
                 @endforeach
             </select>
         </div>
+
+        <div class="mb-3">
+            <label for="published_at" class="form-label">Published Date</label>
+            <input type="date" class="form-control" id="published_at" name="published_at" value="{{ $post->published_at ? $post->published_at->format('Y-m-d') : '' }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="images" class="form-label">Images (Upload to append/replace)</label>
+            <input type="file" class="form-control" id="images" name="images[]" multiple>
+
+            @if($post->images)
+                <div class="mt-2">
+                    <small>Current Images:</small>
+                    <div class="d-flex gap-2">
+                         @foreach($post->images as $image)
+                            <img src="{{ asset('storage/' . $image) }}" width="50" class="rounded">
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+        </div>
         <div class="mb-3">
             <label for="content" class="form-label">Content</label>
             <textarea class="form-control" id="content" name="content" rows="5" required>{{ $post->content }}</textarea>
         </div>
+
+        <script>
+            flatpickr("#published_at", {
+                enableTime: false,
+                dateFormat: "Y-m-d",
+            });
+        </script>
+        
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('posts.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
