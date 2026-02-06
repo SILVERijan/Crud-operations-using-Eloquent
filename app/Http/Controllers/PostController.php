@@ -41,8 +41,14 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        $categories = Category::all();
-        return view('posts.edit', compact('post', 'categories'));
+    
+        if(isset($post)) {        
+            $categories = Category::all();
+            return view('posts.edit', compact('post', 'categories'));
+            }
+            
+            return redirect()->route('posts.index');
+        
     }
 
     public function update(Request $request, Post $post)

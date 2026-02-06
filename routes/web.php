@@ -9,4 +9,8 @@ Route::get('/', function () {
 });
 
 Route::resource('categories', CategoryController::class);
-Route::resource('posts', PostController::class);
+Route::resource('posts', PostController::class)->missing(function(){
+     return redirect()->route('posts.index');
+});
+
+
