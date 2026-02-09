@@ -9,7 +9,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::where('user_id', auth()->id())->oldest()->paginate(10);
         return view('categories.index', compact('categories'));
     }
 
@@ -20,12 +20,14 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required',
             'description' => 'nullable',
-        ]);
+        ]);     
 
-        Category::create($request->all());
+        $data['user_id'] = auth()->id();
+
+        Category::create($data);
 
         return redirect()->route('categories.index')
             ->with('success', 'Category created successfully.');
@@ -43,12 +45,12 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required',
             'description' => 'nullable',
         ]);
 
-        $category->update($request->all());
+        $category->update($data);
 
         return redirect()->route('categories.index')
             ->with('success', 'Category updated successfully');

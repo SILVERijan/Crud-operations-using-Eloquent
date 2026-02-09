@@ -12,19 +12,20 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('category')->oldest()->paginate(10);
+        $posts = Post::where('user_id', auth()->id())->with('category')->oldest()->paginate(10);
         return view('posts.index', compact('posts'));
     }
 
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::where('user_id', auth()->id())->get();
         return view('posts.create', compact('categories'));
     }
 
     public function store(StoreRequest $request)
     {
-        Post::create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
 
         if ($request->hasFile('images')) {
             $images = [];
@@ -47,19 +48,13 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-    
-        if(isset($post)) {        
-            $categories = Category::all();
-            return view('posts.edit', compact('post', 'categories'));
-            }
-            
-            return redirect()->route('/posts');
-        
+        $categories = Category::where('user_id', auth()->id())->get();
+        return view('posts.edit', compact('post', 'categories'));
     }
 
     public function update(PostRequest $request, Post $post)
     {
-        Post::create($request->validated());
+        $data = $request->validated();
 
         if ($request->hasFile('images')) {
             $images = [];

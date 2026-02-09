@@ -6,12 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    protected $fillable = ['title', 'content', 'category_id', 'published_at', 'images'];
+    protected $fillable = ['title', 'content', 'category_id', 'user_id', 'published_at', 'images'];
 
     protected $casts = [
         'images' => 'array',
         'published_at' => 'date',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function category()
     {
