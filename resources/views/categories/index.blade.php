@@ -1,10 +1,15 @@
 @extends('layout')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Categories</h1>
-        <a href="{{ route('categories.create') }}" class="btn btn-primary">Create Category</a>
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="fw-bold h2 mb-0">Categories</h1>
+        <a href="{{ route('categories.create') }}" class="btn btn-primary btn-lg shadow-sm rounded-3">
+            <i class="bi bi-tag-fill me-1"></i> Create Category
+        </a>
     </div>
+
+    <div class="premium-card p-4">
+        <div class="table-responsive">
 
     <table class="table table-bordered">
         <thead>
@@ -32,9 +37,12 @@
                 </tr>
             @endforeach
         </tbody>
-    </table>
-    
-    {{ $categories->links() }}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        {{ $categories->links() }}
+    </div>
     
 @endsection
 

@@ -1,10 +1,15 @@
 @extends('layout')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Posts</h1>
-        <a href="{{ route('posts.create') }}" class="btn btn-primary">Create Post</a>
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="fw-bold h2 mb-0">Manage Posts</h1>
+        <a href="{{ route('posts.create') }}" class="btn btn-primary btn-lg shadow-sm rounded-3">
+            <i class="bi bi-plus-lg me-1"></i> Create New Post
+        </a>
     </div>
+
+    <div class="premium-card p-4">
+        <div class="table-responsive">
 
         <table class="table table-bordered">
         <thead>
@@ -35,9 +40,11 @@
                 </tr>
             @endforeach
         </tbody>
-    </table>
-   
+        </div>
+    </div>
 
-    {{ $posts->links() }}
+    <div class="mt-4">
+        {{ $posts->links() }}
+    </div>
 @endsection
 

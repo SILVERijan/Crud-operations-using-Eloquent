@@ -24,7 +24,12 @@ class PostRequest extends FormRequest
         return [
             'title' => 'required',
             'content' => 'required',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => [
+                'required',
+                \Illuminate\Validation\Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->where('user_id', $this->user()->id);
+                }),
+            ],
             'published_at' => 'required|date',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];

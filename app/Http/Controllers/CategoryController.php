@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -18,12 +19,9 @@ class CategoryController extends Controller
         return view('categories.create');
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'description' => 'nullable',
-        ]);     
+        $data = $request->validated();     
 
         $data['user_id'] = auth()->id();
 
@@ -43,12 +41,9 @@ class CategoryController extends Controller
         return view('categories.edit', compact('category'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'description' => 'nullable',
-        ]);
+        $data = $request->validated();
 
         $category->update($data);
 

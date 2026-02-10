@@ -22,20 +22,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 // Protected Routes
 Route::middleware('auth')->group(function () {
     // Categories
-    Route::resource('categories', CategoryController::class);
+    Route::resource('categories', CategoryController::class)->except(['show', 'edit', 'update', 'destroy']);
     Route::middleware('owns:category')->group(function () {
-        Route::get('categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-        Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-        Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+        Route::resource('categories', CategoryController::class)->only(['show', 'edit', 'update', 'destroy']);
     });
 
     // Posts
-    Route::resource('posts', PostController::class)->missing(function(){
+    Route::resource('posts', PostController::class)->except(['show', 'edit', 'update', 'destroy'])->missing(function(){
          return redirect()->route('posts.index');
     });
     Route::middleware('owns:post')->group(function () {
-        Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
-        Route::put('posts/{post}', [PostController::class, 'update'])->name('posts.update');
-        Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+        Route::resource('posts', PostController::class)->only(['show', 'edit', 'update', 'destroy']);
     });
 });
