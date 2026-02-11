@@ -23,7 +23,7 @@
                     </div>
                 </form>
                 <div class="mt-3 text-center">
-                    <p>Don't have an account? <a href="{{ route('register.show') }}">Register here</a></p>
+                    <p>Don't have an account? <a href="{{ route('register') }}">Register here</a></p>
                 </div>
             </div>
         </div>

@@ -31,7 +31,7 @@
                     </div>
                 </form>
                 <div class="mt-3 text-center">
-                    <p>Already have an account? <a href="{{ route('login.show') }}">Login here</a></p>
+                    <p>Already have an account? <a href="{{ route('login') }}">Login here</a></p>
                 </div>
             </div>
         </div>

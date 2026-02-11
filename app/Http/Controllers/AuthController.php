@@ -24,7 +24,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('posts');
+            return redirect()->intended(route('posts.index'));
         }
 
         return back()->withErrors([
@@ -32,7 +32,7 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function showRegister()
+    public function showRegister() 
     {
         return view('auth.register');
     }

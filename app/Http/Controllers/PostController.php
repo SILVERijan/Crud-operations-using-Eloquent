@@ -43,17 +43,20 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $this->authorize('view', $post);
         return view('posts.show', compact('post'));
     }
 
     public function edit(Post $post)
     {
+        $this->authorize('update', $post);
         $categories = Category::where('user_id', auth()->id())->get();
         return view('posts.edit', compact('post', 'categories'));
     }
 
     public function update(PostRequest $request, Post $post)
     {
+        $this->authorize('update', $post);
         $data = $request->validated();
 
         if ($request->hasFile('images')) {
@@ -72,6 +75,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post);
         $post->delete();
 
         return redirect()->route('posts.index')

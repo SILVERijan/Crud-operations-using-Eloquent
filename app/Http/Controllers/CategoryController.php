@@ -33,16 +33,19 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
+        $this->authorize('view', $category);
         return view('categories.show', compact('category'));
     }
 
     public function edit(Category $category)
     {
+        $this->authorize('update', $category);
         return view('categories.edit', compact('category'));
     }
 
     public function update(CategoryRequest $request, Category $category)
     {
+        $this->authorize('update', $category);
         $data = $request->validated();
 
         $category->update($data);
@@ -53,6 +56,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        $this->authorize('delete', $category);
         $category->delete();
 
         return redirect()->route('categories.index')
