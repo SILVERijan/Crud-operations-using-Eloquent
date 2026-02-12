@@ -10,10 +10,18 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::where('user_id', auth()->id())->with('category')->oldest()->paginate(10);
-        return view('posts.index', compact('posts'));
+        $posts = Post::where('user_id', auth()->id())
+            ->filter($request->only(['search', 'category_id']))
+            ->with('category')
+            ->oldest()
+            ->paginate(10)
+            ->appends($request->query());
+
+        $categories = Category::where('user_id', auth()->id())->get();
+
+        return view('posts.index', compact('posts', 'categories'));
     }
 
     public function create()

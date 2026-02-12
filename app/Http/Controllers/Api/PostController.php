@@ -14,6 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
+    
         $posts = Post::with('category')->where('user_id', auth()->id())->latest()->paginate();
         return PostResource::collection($posts);
     }

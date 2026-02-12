@@ -22,4 +22,18 @@ class Post extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('content', 'like', '%' . $search . '%');
+            });
+        });
+
+        $query->when($filters['category_id'] ?? null, function ($query, $category) {
+            $query->where('category_id', $category);
+        });
+    }
 }

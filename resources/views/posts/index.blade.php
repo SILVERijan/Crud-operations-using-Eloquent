@@ -8,6 +8,34 @@
         </a>
     </div>
 
+    <!-- Filter Section -->
+    <div class="premium-card p-4 mb-4">
+        <form action="{{ route('posts.index') }}" method="GET" class="row g-3">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control border-start-0" placeholder="Search posts..." value="{{ request('search') }}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select name="category_id" class="form-select">
+                    <option value="">All Categories</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                <a href="{{ route('posts.index') }}" class="btn btn-outline-secondary w-100">Clear</a>
+            </div>
+        </form>
+    </div>
+
     <div class="premium-card p-4">
         <div class="table-responsive">
 
