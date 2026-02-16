@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('user_id', auth()->id())->oldest()->paginate(10);
+        $categories = Category::where('user_id', auth()->id())->oldest()->paginate(5);
         return view('categories.index', compact('categories'));
     }
 
@@ -22,7 +22,7 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $data = $request->validated();     
-
+    
         $data['user_id'] = auth()->id();
 
         Category::create($data);
@@ -63,3 +63,4 @@ class CategoryController extends Controller
             ->with('success', 'Category deleted successfully');
     }
 }
+                                                                                                                                        

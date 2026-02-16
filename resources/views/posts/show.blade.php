@@ -29,7 +29,7 @@
             @endif
 
             <div class="card-text">
-                {!! nl2br(e($post->content)) !!}
+                {!! \Illuminate\Support\Str::markdown($post->content) !!}
             </div>
         </div>
     </div>

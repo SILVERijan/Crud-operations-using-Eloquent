@@ -2,11 +2,32 @@
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-5">
-        <h1 class="fw-bold h2 mb-0">Manage Posts</h1>
+        <h1 class="fw-bold h2 mb-0">
+            @if(request()->routeIs('posts.liked'))
+                Liked Posts
+            @else
+                Manage Posts
+            @endif
+        </h1>
         <a href="{{ route('posts.create') }}" class="btn btn-primary btn-lg shadow-sm rounded-3">
             <i class="bi bi-plus-lg me-1"></i> Create New Post
-        </a>
+        </a>            
     </div>
+
+    <!-- Top Categories Section -->
+    @if($topCategories->isNotEmpty())
+        <div class="mb-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Trending Categories</h5>
+            <div class="d-flex gap-2 flex-wrap">
+                @foreach($topCategories as $category)
+                    <a href="{{ route('posts.index', ['category_id' => $category->id]) }}" class="btn btn-light border shadow-sm rounded-pill d-flex align-items-center px-3">
+                        <span class="fw-medium">{{ $category->name }}</span>
+                        <span class="badge bg-primary rounded-pill ms-2">{{ $category->posts_count }}</span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
     <!-- Filter Section -->
     <div class="premium-card p-4 mb-4">
@@ -55,8 +76,15 @@
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->title }}</td>
                     <td>{{ $post->category->name }}</td>
-                    <td>{{ \Illuminate\Support\Str::limit($post->content, 50) }}</td>
+                    <td>{{ \Illuminate\Support\Str::limit(strip_tags(\Illuminate\Support\Str::markdown($post->content)), 50) }}</td>
                     <td>    
+                        <div class="d-flex gap-1">
+                        <form action="{{ route('posts.like', $post) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-sm {{ auth()->user()->likes->contains($post) ? 'btn-danger' : 'btn-outline-danger' }}">
+                                <i class="bi {{ auth()->user()->likes->contains($post) ? 'bi-heart-fill' : 'bi-heart' }}"></i>
+                            </button>
+                        </form>
                         <a href="{{ route('posts.show', $post) }}" class="btn btn-sm btn-info">View</a>
                         <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-warning">Edit</a>
                         <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
@@ -64,6 +92,7 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach

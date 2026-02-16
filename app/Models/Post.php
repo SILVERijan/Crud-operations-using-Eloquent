@@ -23,7 +23,8 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function scopeFilter($query, array $filters)
+    //search and category filter section
+        public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
@@ -35,5 +36,12 @@ class Post extends Model
         $query->when($filters['category_id'] ?? null, function ($query, $category) {
             $query->where('category_id', $category);
         });
+    }
+
+   
+
+    public function likes()
+    {
+        return $this->belongsToMany(User::class);
     }
 }

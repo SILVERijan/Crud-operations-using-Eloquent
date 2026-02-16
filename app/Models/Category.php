@@ -17,4 +17,12 @@ class Category extends Model
     {
         return $this->hasMany(Post::class);
     }
+
+    public function scopeTopUsed($query, $limit = 5)
+    {
+        return $query->withCount('posts')
+            ->has('posts')
+            ->orderByDesc('posts_count')
+            ->limit($limit);
+    }
 }

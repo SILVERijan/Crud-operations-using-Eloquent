@@ -44,17 +44,28 @@
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">Content</label>
-            <textarea class="form-control" id="content" name="content" rows="5" required>{{ $post->content }}</textarea>
+            <textarea class="form-control" id="content" name="content" rows="5">{{ $post->content }}</textarea>
         </div>
 
-        <script>
-            flatpickr("#published_at", {
-                enableTime: false,
-                dateFormat: "Y-m-d",
-            });
-        </script>
-        
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('posts.index') }}" class="btn btn-secondary">Cancel</a>
-    </form>
+    <script>
+        flatpickr("#published_at", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+        });
+    </script>
+    
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="{{ route('posts.index') }}" class="btn btn-secondary">Cancel</a>
+</form>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script>
+    const easyMDE = new EasyMDE({element: document.getElementById('content')});
+</script>
+@endpush

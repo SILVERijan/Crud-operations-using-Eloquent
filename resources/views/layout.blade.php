@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silver CRUD - Premium Management</title>
+    <title>Silver CRUD</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    @stack('styles')
     <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
 <body>
@@ -28,8 +29,12 @@
                         </li>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link fw-medium {{ request()->routeIs('posts.*') ? 'text-primary' : '' }}" href="{{ route('posts.index') }}">Posts</a>
+                            <a class="nav-link fw-medium {{ request()->routeIs('posts.index') ? 'text-primary' : '' }}" href="{{ route('posts.index') }}">Posts</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium {{ request()->routeIs('posts.liked') ? 'text-primary' : '' }}" href="{{ route('posts.liked') }}">Liked</a>
+                        </li>
+                        <li class="nav-item">
                         <li class="nav-item">
                             <a class="nav-link fw-medium {{ request()->routeIs('categories.*') ? 'text-primary' : '' }}" href="{{ route('categories.index') }}">Categories</a>
                         </li>
@@ -102,6 +107,8 @@
             }, 5000);
         });
     </script>
+    @stack('scripts')
 </body>
 </html>
 
+    
