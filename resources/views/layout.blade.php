@@ -35,6 +35,13 @@
                             <a class="nav-link fw-medium {{ request()->routeIs('posts.liked') ? 'text-primary' : '' }}" href="{{ route('posts.liked') }}">Liked</a>
                         </li>
                         <li class="nav-item">
+                        @if(auth()->check() && auth()->user()->isAdmin())
+                            <li class="nav-item">
+                                <a class="nav-link fw-medium {{ request()->routeIs('admin.*') ? 'text-primary' : '' }}" href="{{ route('admin.dashboard') }}">
+                                    <i class="bi bi-shield-lock"></i> Admin Panel
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item">
                             <a class="nav-link fw-medium {{ request()->routeIs('categories.*') ? 'text-primary' : '' }}" href="{{ route('categories.index') }}">Categories</a>
                         </li>

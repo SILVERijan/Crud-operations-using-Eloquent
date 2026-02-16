@@ -6,26 +6,18 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureOwnership
+class EnsureUserIsAdmin
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $parameter): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        $resource = $request->route($parameter);
-
-        // Allow admins to access any resource
-        if ($request->user()?->isAdmin()) {
-            return $next($request);
-        }
-
-        if (!$resource || $resource->user_id !== $request->user()?->id) {
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
-
         return $next($request);
     }
 }

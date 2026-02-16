@@ -65,4 +65,18 @@ class PostController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function userPosts(Request $request, \App\Models\User $user)
+    {
+        $posts = Post::where('user_id', $user->id)
+            ->when($request->category_id, function($query) use ($request) {
+                return $query->where('category_id', $request->category_id);
+            })
+            ->select('id', 'title', 'created_at', 'category_id', 'user_id')
+            ->with(['category:id,name'])
+            ->latest()
+            ->paginate();
+
+        return PostResource::collection($posts);
+    }
 }

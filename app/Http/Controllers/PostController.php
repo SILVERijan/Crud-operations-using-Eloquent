@@ -26,7 +26,7 @@ class PostController extends Controller
         return view('posts.index', compact('posts', 'categories', 'topCategories'));
     }
 
-    //creation of the post 
+    // creation of the post 
     public function create()
     {
         $categories = Category::where('user_id', auth()->id())->get();

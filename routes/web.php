@@ -30,4 +30,13 @@ Route::middleware('throttle:global')->group(function () {
         Route::post('posts/{post}/like', [App\Http\Controllers\LikeController::class, 'toggle'])->name('posts.like');
         Route::resource('posts', PostController::class);
     });
+
+    // Admin Routes
+    Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/users', [App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users');
+        Route::get('/users/{user}', [App\Http\Controllers\Admin\DashboardController::class, 'userDetail'])->name('users.show');
+        Route::get('/posts', [App\Http\Controllers\Admin\DashboardController::class, 'posts'])->name('posts');
+        Route::get('/categories', [App\Http\Controllers\Admin\DashboardController::class, 'categories'])->name('categories');
+    });
 });
