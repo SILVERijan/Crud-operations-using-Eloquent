@@ -12,9 +12,27 @@
         <div class="card-body">
             <h2>{{ $user->name }}</h2>
             <p class="text-muted">{{ $user->email }}</p>
-            <span class="badge {{ $user->isAdmin() ? 'bg-danger' : 'bg-secondary' }}">
-                {{ ucfirst($user->role) }}
-            </span>
+            <div>
+                @if($user->roles->isNotEmpty())
+                    @foreach($user->roles as $role)
+                        @if($role->slug === 'admin')
+                            <span class="badge bg-danger">
+                                <i class="bi bi-shield-lock"></i> Admin
+                            </span>
+                        @elseif($role->slug === 'customer')
+                            <span class="badge bg-primary">
+                                <i class="bi bi-person-fill"></i> Customer
+                            </span>
+                        @elseif($role->slug === 'reader')
+                            <span class="badge bg-info">
+                                <i class="bi bi-book"></i> Reader
+                            </span>
+                        @endif
+                    @endforeach
+                @else
+                    <span class="badge bg-secondary">No Role</span>
+                @endif
+            </div>
         </div>
     </div>
     

@@ -17,13 +17,14 @@ class EnsureOwnership
     {
         $resource = $request->route($parameter);
 
-        // Allow admins to access any resource
+        // Allow admins to access any resource (they bypass ownership checks)
         if ($request->user()?->isAdmin()) {
             return $next($request);
         }
 
+        // Check if the resource exists and belongs to the current user
         if (!$resource || $resource->user_id !== $request->user()?->id) {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action. You can only access your own resources.');
         }
 
         return $next($request);

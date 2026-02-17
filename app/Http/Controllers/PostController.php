@@ -10,32 +10,45 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    //index of the post where there is pagination, viewing of the post and all.
+    /**
+     * Display a listing of all posts (public for all authenticated users).
+     */
     public function index(Request $request)
     {
-        $posts = Post::where('user_id', auth()->id())
+        // Show ALL posts (not filtered by user_id) - PUBLIC ACCESS
+        $posts = Post::query()
             ->filter($request->only(['search', 'category_id']))
-            ->with('category')
-            ->oldest()
-            ->paginate(5)
+            ->with(['category', 'user']) // Load user relationship to show creator
+            ->latest()
+            ->paginate(10)
             ->appends($request->query());
 
-        $categories = Category::where('user_id', auth()->id())->get();
-        $topCategories = Category::where('user_id', auth()->id())->topUsed(3)->get();
+        // Get all categories for filtering
+        $categories = Category::all();
+        $topCategories = Category::topUsed(3)->get();
 
         return view('posts.index', compact('posts', 'categories', 'topCategories'));
     }
 
-    // creation of the post 
+    /**
+     * Show the form for creating a new post.
+     * Only customers and admins can create posts.
+     */
     public function create()
     {
-        $categories = Category::where('user_id', auth()->id())->get();
+        $this->authorize('create', Post::class);
+        
+        $categories = Category::all();
         return view('posts.create', compact('categories'));
     }
 
-    //storing values in the post
+    /**
+     * Store a newly created post in storage.
+     */
     public function store(StoreRequest $request)
     {
+        $this->authorize('create', Post::class);
+        
         $data = $request->validated();
         $data['user_id'] = auth()->id();
 
@@ -53,25 +66,40 @@ class PostController extends Controller
             ->with('success', 'Post created successfully.');
     }
 
-    //view section of the post
+    /**
+     * Display the specified post.
+     * All authenticated users can view any post.
+     */
     public function show(Post $post)
     {
         $this->authorize('view', $post);
+        
+        // Load user relationship to show creator
+        $post->load('user', 'category');
+        
         return view('posts.show', compact('post'));
     }
 
-    //editing of the post
+    /**
+     * Show the form for editing the specified post.
+     * Only the owner or admin can edit.
+     */
     public function edit(Post $post)
     {
         $this->authorize('update', $post);
-        $categories = Category::where('user_id', auth()->id())->get();
+        
+        $categories = Category::all();
         return view('posts.edit', compact('post', 'categories'));
     }
 
-    //updating post 
+    /**
+     * Update the specified post in storage.
+     * Only the owner or admin can update.
+     */
     public function update(PostRequest $request, Post $post)
     {
         $this->authorize('update', $post);
+        
         $data = $request->validated();
 
         if ($request->hasFile('images')) {
@@ -88,10 +116,14 @@ class PostController extends Controller
             ->with('success', 'Post updated successfully');
     }
 
-    //deletion of post
+    /**
+     * Remove the specified post from storage.
+     * Only the owner or admin can delete.
+     */
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
+        
         $post->delete();
 
         return redirect()->route('posts.index')

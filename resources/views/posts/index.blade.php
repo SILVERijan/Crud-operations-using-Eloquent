@@ -6,12 +6,14 @@
             @if(request()->routeIs('posts.liked'))
                 Liked Posts
             @else
-                Manage Posts
+                All Posts
             @endif
         </h1>
-        <a href="{{ route('posts.create') }}" class="btn btn-primary btn-lg shadow-sm rounded-3">
-            <i class="bi bi-plus-lg me-1"></i> Create New Post
-        </a>            
+        @can('create', App\Models\Post::class)
+            <a href="{{ route('posts.create') }}" class="btn btn-primary btn-lg shadow-sm rounded-3">
+                <i class="bi bi-plus-lg me-1"></i> Create New Post
+            </a>
+        @endcan
     </div>
 
     <!-- Top Categories Section -->
@@ -66,6 +68,7 @@
                 <th>ID</th>
                 <th>Title</th>
                 <th>Category</th>
+                <th>Created By</th>
                 <th>Content</th>
                 <th>Actions</th>
             </tr>
@@ -76,6 +79,15 @@
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->title }}</td>
                     <td>{{ $post->category->name }}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-circle me-2 text-primary"></i>
+                            <div>
+                                <div class="fw-semibold">{{ $post->user->name }}</div>
+                                <small class="text-muted">ID: {{ $post->user_id }}</small>
+                            </div>
+                        </div>
+                    </td>
                     <td>{{ \Illuminate\Support\Str::limit(strip_tags(\Illuminate\Support\Str::markdown($post->content)), 50) }}</td>
                     <td>    
                         <div class="d-flex gap-1">
@@ -86,12 +98,18 @@
                             </button>
                         </form>
                         <a href="{{ route('posts.show', $post) }}" class="btn btn-sm btn-info">View</a>
-                        <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
+                        
+                        @can('update', $post)
+                            <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-warning">Edit</a>
+                        @endcan
+                        
+                        @can('delete', $post)
+                            <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        @endcan
                         </div>
                     </td>
                 </tr>

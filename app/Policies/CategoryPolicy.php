@@ -18,6 +18,11 @@ class CategoryPolicy
 
     public function view(User $user, Category $category): bool
     {
+        // Admins can view any category
+        if ($user->isAdmin()) {
+            return true;
+        }
+        
         return $user->id === $category->user_id;
     }
 
@@ -28,11 +33,21 @@ class CategoryPolicy
 
     public function update(User $user, Category $category): bool
     {
+        // Admins can update any category
+        if ($user->isAdmin()) {
+            return true;
+        }
+        
         return $user->id === $category->user_id;
     }
 
     public function delete(User $user, Category $category): bool
     {
+        // Admins can delete any category
+        if ($user->isAdmin()) {
+            return true;
+        }
+        
         return $user->id === $category->user_id;
     }
 

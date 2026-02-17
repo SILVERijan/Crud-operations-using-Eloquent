@@ -25,7 +25,9 @@ class DashboardController extends Controller
     // View All Users
     public function users()
     {
-        $users = User::withCount(['posts', 'categories'])->paginate(20);
+        $users = User::with('roles')
+            ->withCount(['posts', 'categories'])
+            ->paginate(20);
         return view('admin.users', compact('users'));
     }
 
@@ -61,7 +63,7 @@ class DashboardController extends Controller
     // View specific user's data
     public function userDetail(User $user)
     {
-        $user->load(['posts', 'categories']);
+        $user->load(['posts', 'categories', 'roles']);
         return view('admin.user-detail', compact('user'));
     }
 }

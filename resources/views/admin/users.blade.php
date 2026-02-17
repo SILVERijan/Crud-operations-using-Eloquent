@@ -25,9 +25,25 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
-                                <span class="badge {{ $user->isAdmin() ? 'bg-danger' : 'bg-secondary' }}">
-                                    {{ ucfirst($user->role) }}
-                                </span>
+                                @if($user->roles->isNotEmpty())
+                                    @foreach($user->roles as $role)
+                                        @if($role->slug === 'admin')
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-shield-lock"></i> Admin
+                                            </span>
+                                        @elseif($role->slug === 'customer')
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-person-fill"></i> Customer
+                                            </span>
+                                        @elseif($role->slug === 'reader')
+                                            <span class="badge bg-info">
+                                                <i class="bi bi-book"></i> Reader
+                                            </span>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <span class="badge bg-secondary">No Role</span>
+                                @endif
                             </td>
                             <td>{{ $user->posts_count }}</td>
                             <td>{{ $user->categories_count }}</td>

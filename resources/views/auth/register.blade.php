@@ -26,6 +26,24 @@
                         <label for="password_confirmation" class="form-label">Confirm Password</label>
                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                     </div>
+                    
+                    <div class="mb-3">
+                        <label for="role_id" class="form-label">Select Your Role</label>
+                        <select name="role_id" id="role_id" class="form-select @error('role_id') is-invalid @enderror" required>
+                            <option value="">-- Choose your role --</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                    {{ $role->name }} - {{ $role->description }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('role_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <small class="form-text text-muted">
+                            <strong>Reader:</strong> View posts only | <strong>Customer:</strong> Manage your own forms
+                        </small>
+                    </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-success">Register</button>
                     </div>
