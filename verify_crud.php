@@ -19,8 +19,10 @@ $post = Post::create([
 echo "Post created: " . $post->title . "\n";
 
 // Read
-$fetchedPost = Post::with('category')->find($post->id);
-echo "Fetched Post Category: " . $fetchedPost->category->name . "\n";
+$fetchedPost = Post::with('categories')->find($post->id);
+
+echo "Fetched Post Categories: " . $fetchedPost->categories->pluck('name')->implode(', ') . "\n";
+
 
 // Update
 $category->update(['name' => 'Technology']);

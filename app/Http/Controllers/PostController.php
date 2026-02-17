@@ -18,14 +18,16 @@ class PostController extends Controller
         // Show ALL posts (not filtered by user_id) - PUBLIC ACCESS
         $posts = Post::query()
             ->filter($request->only(['search', 'category_id']))
-            ->with(['category', 'user']) // Load user relationship to show creator
+            ->with(['categories', 'user']) // Load categories relationship
+
             ->latest()
             ->paginate(10)
             ->appends($request->query());
 
-        // Get all categories for filtering
-        $categories = Category::all();
-        $topCategories = Category::topUsed(3)->get();
+        // Get all categories for filtering (only those created by the user)
+        $categories = Category::where('user_id', auth()->id())->get();
+        $topCategories = Category::where('user_id', auth()->id())->topUsed(3)->get();
+
 
         return view('posts.index', compact('posts', 'categories', 'topCategories'));
     }
@@ -38,7 +40,8 @@ class PostController extends Controller
     {
         $this->authorize('create', Post::class);
         
-        $categories = Category::all();
+        $categories = Category::where('user_id', auth()->id())->get();
+
         return view('posts.create', compact('categories'));
     }
 
@@ -60,7 +63,9 @@ class PostController extends Controller
             $data['images'] = $images;
         }
 
-        Post::create($data);
+        $post = Post::create($data);
+        $post->categories()->sync($data['category_id']);
+
 
         return redirect()->route('posts.index')
             ->with('success', 'Post created successfully.');
@@ -75,7 +80,8 @@ class PostController extends Controller
         $this->authorize('view', $post);
         
         // Load user relationship to show creator
-        $post->load('user', 'category');
+        $post->load('user', 'categories');
+
         
         return view('posts.show', compact('post'));
     }
@@ -88,7 +94,8 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
         
-        $categories = Category::all();
+        $categories = Category::where('user_id', auth()->id())->get();
+
         return view('posts.edit', compact('post', 'categories'));
     }
 
@@ -111,6 +118,8 @@ class PostController extends Controller
         }
 
         $post->update($data);
+        $post->categories()->sync($data['category_id']);
+
 
         return redirect()->route('posts.index')
             ->with('success', 'Post updated successfully');

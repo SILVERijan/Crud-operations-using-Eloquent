@@ -78,7 +78,7 @@
                 <tr>
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->title }}</td>
-                    <td>{{ $post->category->name }}</td>
+                    <td>{{ $post->categories->pluck('name')->implode(', ') }}</td>
                     <td>
                         <div class="d-flex align-items-center">
                             <i class="bi bi-person-circle me-2 text-primary"></i>

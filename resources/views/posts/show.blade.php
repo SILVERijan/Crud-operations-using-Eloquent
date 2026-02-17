@@ -11,7 +11,7 @@
                 <div>
                     <h1 class="card-title">{{ $post->title }}</h1>
                     <h6 class="card-subtitle mb-2 text-muted">
-                        Category: {{ $post->category->name }}
+                        Categories: {{ $post->categories->pluck('name')->implode(', ') }}
                         @if($post->published_at)
                             <span class="ms-3">Published: {{ $post->published_at->format('F d, Y') }}</span>
                         @endif

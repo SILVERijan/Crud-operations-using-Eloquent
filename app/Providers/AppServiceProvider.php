@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('auth', function (Request $request) {
-            return Limit::perMinute(150)
+            return Limit::perMinute(15)
             ->by($request->ip())
             ->response(function (Request $request, array $headers) {
                 if ($request->expectsJson()) {
@@ -41,8 +41,8 @@ class AppServiceProvider extends ServiceProvider
                 return redirect()->back()
                     ->withInput($request->except('password'))
                     ->with('error', 'Too many attempts. Please try again later.');
-            });
-        });
+            });     
+        });             
 
         RateLimiter::for('global', function (Request $request) {
             return Limit::perMinute(100)->by($request->ip());

@@ -21,9 +21,9 @@ Route::middleware('throttle:global')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-    // ============================================
+    
     // ADMIN ROUTES - Full CRUD on all resources
-    // ============================================
+
     Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
         // Admin Dashboard
         Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
@@ -33,9 +33,8 @@ Route::middleware('throttle:global')->group(function () {
         Route::get('/categories', [App\Http\Controllers\Admin\DashboardController::class, 'categories'])->name('categories');
     });
 
-    // ============================================
     // CUSTOMER ROUTES - Form management only
-    // ============================================
+
     Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer.')->group(function () {
         // Customers can create, view, and delete their own forms
         Route::get('/forms', [FormController::class, 'index'])->name('forms.index');
@@ -45,10 +44,10 @@ Route::middleware('throttle:global')->group(function () {
         Route::delete('/forms/{form}', [FormController::class, 'destroy'])->middleware('owns:form')->name('forms.destroy');
     });
 
-    // ============================================
+  
     // PUBLIC POSTS - All authenticated users can view
     // CRUD operations controlled by PostPolicy
-    // ============================================
+  
     Route::middleware(['auth', 'throttle:60,1'])->group(function () {
         // Post creation (must be before show route to avoid collision)
         Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');

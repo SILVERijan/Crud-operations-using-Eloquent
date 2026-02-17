@@ -21,7 +21,8 @@ class LikeController extends Controller
 
     public function index()
     {
-        $posts = auth()->user()->likes()->with('category')->paginate(10);
+        $posts = auth()->user()->likes()->with('categories')->paginate(10);
+
         $categories = Category::where('user_id', auth()->id())->get();
         $topCategories = Category::where('user_id', auth()->id())->topUsed(3)->get();
         

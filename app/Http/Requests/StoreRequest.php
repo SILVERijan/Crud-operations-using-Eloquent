@@ -26,8 +26,11 @@ class StoreRequest extends FormRequest
             'content' => 'required',
             'category_id' => [
                 'required',
-                'exists:categories,id',
+                \Illuminate\Validation\Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->where('user_id', auth()->id());
+                }),
             ],
+
             'published_at' => 'required|date',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];

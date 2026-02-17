@@ -34,7 +34,8 @@ class DashboardController extends Controller
     // View All Posts (from all users)
     public function posts(Request $request)
     {
-        $posts = Post::with(['user', 'category'])
+        $posts = Post::with(['user', 'categories'])
+
             ->when($request->user_id, function($query) use ($request) {
                 return $query->where('user_id', $request->user_id);
             })

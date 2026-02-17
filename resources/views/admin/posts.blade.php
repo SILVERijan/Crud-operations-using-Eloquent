@@ -35,7 +35,7 @@
                             <td>{{ $post->id }}</td>
                             <td>{{ Str::limit($post->title, 50) }}</td>
                             <td>{{ $post->user?->name ?? 'Unknown' }}</td>
-                            <td>{{ $post->category?->name ?? 'N/A' }}</td>
+                            <td>{{ $post->categories->pluck('name')->implode(', ') ?: 'N/A' }}</td>
                             <td>{{ $post->published_at?->format('M d, Y') ?? 'Not published' }}</td>
                             <td>
                                 <a href="{{ route('posts.show', $post) }}" class="btn btn-sm btn-primary">
