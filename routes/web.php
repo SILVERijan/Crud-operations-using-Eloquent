@@ -65,6 +65,22 @@ Route::middleware('throttle:global')->group(function () {
         Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
         Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
+        // Notifications
+        Route::get('/notifications', function () {
+            $notifications = auth()->user()->notifications()->paginate(20);
+            return view('notifications.index', compact('notifications'));
+        })->name('notifications.index');
+
+        Route::post('/notifications/mark-all-read', function () {
+            auth()->user()->unreadNotifications->markAsRead();
+            return back();
+        })->name('notifications.markAllRead');
+
+        Route::post('/notifications/{id}/read', function ($id) {
+            auth()->user()->notifications()->findOrFail($id)->markAsRead();
+            return back();
+        })->name('notifications.read');
+
         // Categories - accessible to all authenticated users
         Route::resource('categories', CategoryController::class);
     });

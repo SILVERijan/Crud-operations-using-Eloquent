@@ -7,6 +7,8 @@ use App\Http\Requests\StoreRequest;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Notifications\PostPublished;
+use App\Jobs\ProcessPostImage;
 
 class PostController extends Controller
 {
@@ -85,9 +87,16 @@ class PostController extends Controller
         $post = Post::create($data);
         $post->categories()->sync($data['category_id']);
 
+        //sending queued notifcation to the post autheor
+        $post->user->notify(new PostPublished($post));
 
-        return redirect()->route('posts.index')
-            ->with('success', 'Post created successfully.');
+        // dispatch the background job
+        ProcessPostImage::dispatch($post);
+
+    
+        return redirect()
+        ->route('posts.index')
+        ->with('success', 'Post created (Email and Processing queued!)');
     }
 
     /**

@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $stats = [
             'total_users' => User::count(),
             'total_posts' => Post::count(),
-            'total_categories' => Category::count(),
+            'total_categories' => Category::count(),                                                    
         ];
 
         return view('admin.dashboard', compact('stats'));

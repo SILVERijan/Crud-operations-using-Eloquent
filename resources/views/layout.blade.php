@@ -119,6 +119,60 @@
                                 </a>
                             </li>
                         @endif
+                        {{-- Notifications Dropdown --}}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-bell-fill fs-5"></i>
+                                @if(auth()->user()->unreadNotifications->count() > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                        {{ auth()->user()->unreadNotifications->count() }}
+                                    </span>
+                                @endif
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2 p-0 overflow-hidden" aria-labelledby="notificationDropdown" style="width: 320px;">
+                                <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
+                                    <h6 class="mb-0 fw-bold">Notifications</h6>
+                                    @if(auth()->user()->unreadNotifications->count() > 0)
+                                        <form action="{{ route('notifications.markAllRead') }}" method="POST" id="mark-all-read-form">
+                                            @csrf
+                                            <small class="text-primary cursor-pointer" onclick="document.getElementById('mark-all-read-form').submit()">Mark all as read</small>
+                                        </form>
+                                    @endif
+                                </div>
+                                <div style="max-height: 350px; overflow-y: auto;">
+                                    @forelse(auth()->user()->notifications->take(10) as $notification)
+                                        <div class="p-3 border-bottom transition-all dropdown-item position-relative {{ $notification->read_at ? 'opacity-50' : 'bg-light fw-bold' }}" style="white-space: normal;">
+                                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                                <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                                                @unless($notification->read_at)
+                                                    <form action="{{ route('notifications.read', $notification->id) }}" method="POST" class="position-relative" style="z-index: 10;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-link p-0 text-primary" title="Mark as read">
+                                                            <i class="bi bi-check2-circle"></i>
+                                                        </button>
+                                                    </form>
+                                                @endunless
+                                            </div>
+                                            <div class="small">{{ $notification->data['message'] ?? 'New notification' }}</div>
+                                            @if(isset($notification->data['url']))
+                                                <a href="{{ $notification->data['url'] }}" class="stretched-link"></a>
+                                            @endif
+                                        </div>
+                                    @empty
+                                        <div class="p-4 text-center text-muted">
+                                            <i class="bi bi-bell-slash fs-2 d-block mb-2"></i>
+                                            <small>No notifications yet</small>
+                                        </div>
+                                    @endforelse
+                                </div>
+                                @if(auth()->user()->notifications->count() > 0)
+                                    <div class="p-2 text-center border-top">
+                                        <a href="{{ route('notifications.index') }}" class="small text-decoration-none">View all</a>
+                                    </div>
+                                @endif
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link fw-medium {{ request()->routeIs('categories.*') ? 'text-primary' : '' }}" href="{{ route('categories.index') }}">Categories</a>
                         </li>
