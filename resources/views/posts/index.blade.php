@@ -59,63 +59,75 @@
         </form>
     </div>
 
-    <div class="premium-card p-4">
-        <div class="table-responsive">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach($posts as $post)
+            <div class="col">
+                <article class="premium-card h-100 hover-lift overflow-hidden d-flex flex-column">
+                    @if($post->images && count($post->images) > 0)
+                        <img src="{{ asset('storage/' . $post->images[0]) }}" class="card-img-top" alt="{{ $post->title }}" style="height: 200px; object-fit: cover;">
+                    @else
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-image text-muted fs-1"></i>
+                        </div>
+                    @endif
+                    
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="d-flex gap-2 flex-wrap mb-3">
+                            @foreach($post->categories as $category)
+                                <span class="badge badge-category small">{{ $category->name }}</span>
+                            @endforeach
+                        </div>
 
-        <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Created By</th>
-                <th>Content</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($posts as $post)
-                <tr>
-                    <td>{{ $post->id }}</td>
-                    <td>{{ $post->title }}</td>
-                    <td>{{ $post->categories->pluck('name')->implode(', ') }}</td>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-person-circle me-2 text-primary"></i>
-                            <div>
-                                <div class="fw-semibold">{{ $post->user->name }}</div>
-                                <small class="text-muted">ID: {{ $post->user_id }}</small>
+                        <h3 class="h5 fw-bold mb-3">
+                            <a href="{{ route('posts.show', $post) }}" class="text-dark text-decoration-none hover-primary">{{ $post->title }}</a>
+                        </h3>
+
+                        <p class="text-muted small mb-4 flex-grow-1">
+                            {{ \Illuminate\Support\Str::limit(strip_tags(\Illuminate\Support\Str::markdown($post->content)), 120) }}
+                        </p>
+
+                        <div class="d-flex align-items-center justify-content-between mt-auto pt-3 border-top">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-circle text-primary me-2"></i>
+                                <span class="small fw-medium">{{ $post->user->name }}</span>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <form action="{{ route('posts.like', $post) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm {{ auth()->user()->likes->contains($post) ? 'btn-danger' : 'btn-outline-danger' }} rounded-pill border-0">
+                                        <i class="bi {{ auth()->user()->likes->contains($post) ? 'bi-heart-fill' : 'bi-heart' }}"></i>
+                                    </button>
+                                </form>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light rounded-pill border-0" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                        <li><a class="dropdown-item" href="{{ route('posts.show', $post) }}"><i class="bi bi-eye me-2"></i>View</a></li>
+                                        @can('update', $post)
+                                            <li><a class="dropdown-item" href="{{ route('posts.edit', $post) }}"><i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                        @endcan
+                                        @can('delete', $post)
+                                            <li>
+                                                <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Are you sure?')">
+                                                        <i class="bi bi-trash me-2"></i>Delete
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        @endcan
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </td>
-                    <td>{{ \Illuminate\Support\Str::limit(strip_tags(\Illuminate\Support\Str::markdown($post->content)), 50) }}</td>
-                    <td>    
-                        <div class="d-flex gap-1">
-                        <form action="{{ route('posts.like', $post) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-sm {{ auth()->user()->likes->contains($post) ? 'btn-danger' : 'btn-outline-danger' }}">
-                                <i class="bi {{ auth()->user()->likes->contains($post) ? 'bi-heart-fill' : 'bi-heart' }}"></i>
-                            </button>
-                        </form>
-                        <a href="{{ route('posts.show', $post) }}" class="btn btn-sm btn-info">View</a>
-                        
-                        @can('update', $post)
-                            <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-warning">Edit</a>
-                        @endcan
-                        
-                        @can('delete', $post)
-                            <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                        @endcan
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-        </div>
+                    </div>
+                </article>
+            </div>
+        @endforeach
     </div>
 
     <div class="mt-4">

@@ -58,6 +58,7 @@ class PostController extends Controller
         return new PostResource($post->load('category'));
     }
 
+    //delete and returing the reponse in json format with status code 204
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);

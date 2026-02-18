@@ -54,6 +54,7 @@ Route::middleware('throttle:global')->group(function () {
         Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
         // Post likes (must be before show route to avoid collision)
+        Route::get('posts/my', [PostController::class, 'myPosts'])->name('posts.my');
         Route::get('posts/liked', [App\Http\Controllers\LikeController::class, 'index'])->name('posts.liked');
         Route::post('posts/{post}/like', [App\Http\Controllers\LikeController::class, 'toggle'])->name('posts.like');
         

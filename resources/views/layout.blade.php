@@ -10,6 +10,79 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .glass-nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .premium-card {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 1.25rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .text-gradient {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .badge-category {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            padding: 0.4em 0.8em;
+        }
+
+        .post-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .post-content h2, .post-content h3 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
     @stack('styles')
     <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
@@ -31,6 +104,9 @@
                     @else
                         <li class="nav-item">
                             <a class="nav-link fw-medium {{ request()->routeIs('posts.index') ? 'text-primary' : '' }}" href="{{ route('posts.index') }}">Posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium {{ request()->routeIs('posts.my') ? 'text-primary' : '' }}" href="{{ route('posts.my') }}">My Posts</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link fw-medium {{ request()->routeIs('posts.liked') ? 'text-primary' : '' }}" href="{{ route('posts.liked') }}">Liked</a>

@@ -33,6 +33,25 @@ class PostController extends Controller
     }
 
     /**
+     * Display a listing of the authenticated user's posts.
+     */
+    public function myPosts(Request $request)
+    {
+        $posts = Post::query()
+            ->where('user_id', auth()->id())
+            ->filter($request->only(['search', 'category_id']))
+            ->with(['categories', 'user'])
+            ->latest()
+            ->paginate(10)
+            ->appends($request->query());
+
+        $categories = Category::where('user_id', auth()->id())->get();
+        $topCategories = Category::where('user_id', auth()->id())->topUsed(3)->get();
+
+        return view('posts.index', compact('posts', 'categories', 'topCategories'));
+    }
+
+    /**
      * Show the form for creating a new post.
      * Only customers and admins can create posts.
      */
