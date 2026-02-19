@@ -69,3 +69,4 @@ class ProcessPostImage implements ShouldQueue
         Log::critical("Job Permanently Failed: Post ID {$this->post->id}. Reason: " . $exception->getMessage());
     }
 }
+        

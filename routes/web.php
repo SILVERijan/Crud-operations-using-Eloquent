@@ -43,6 +43,15 @@ Route::middleware('throttle:global')->group(function () {
         Route::get('/forms/{form}', [FormController::class, 'show'])->middleware('owns:form')->name('forms.show');
         Route::delete('/forms/{form}', [FormController::class, 'destroy'])->middleware('owns:form')->name('forms.destroy');
     });
+    
+    // READER ROUTES - Read-only access to posts and categories
+    Route::middleware(['auth', 'role:reader'])->prefix('reader')->name('reader')->group(function() {
+        // Readers can only view post and category listing and details
+        Route::get('/posts', [PostController::class, 'index'])->name('posts.index');    
+        Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+    });
 
   
     // PUBLIC POSTS - All authenticated users can view

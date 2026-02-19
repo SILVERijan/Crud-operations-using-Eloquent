@@ -30,7 +30,7 @@ class AuthController extends Controller
             if ($user->isAdmin()) {
                 return redirect()->intended(route('admin.dashboard'));
             } elseif ($user->isReader()) {
-                return redirect()->intended(route('reader.posts.index'));
+                return redirect()->intended(route('posts.index'));
             } elseif ($user->isCustomer()) {
                 return redirect()->intended(route('customer.forms.index'));
             }
@@ -76,7 +76,7 @@ class AuthController extends Controller
         $role = \App\Models\Role::find($request->role_id);
         
         if ($role->slug === 'reader') {
-            return redirect()->route('reader.posts.index');
+            return redirect()->route('posts.index');
         } elseif ($role->slug === 'customer') {
             return redirect()->route('customer.forms.index');
         }
