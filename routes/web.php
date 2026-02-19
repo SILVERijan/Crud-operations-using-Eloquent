@@ -31,6 +31,7 @@ Route::middleware('throttle:global')->group(function () {
         Route::get('/users/{user}', [App\Http\Controllers\Admin\DashboardController::class, 'userDetail'])->name('users.show');
         Route::get('/posts', [App\Http\Controllers\Admin\DashboardController::class, 'posts'])->name('posts');
         Route::get('/categories', [App\Http\Controllers\Admin\DashboardController::class, 'categories'])->name('categories');
+        Route::get('/jobs', [App\Http\Controllers\Admin\DashboardController::class, 'jobs'])->name('jobs');
     });
 
     // CUSTOMER ROUTES - Form management only

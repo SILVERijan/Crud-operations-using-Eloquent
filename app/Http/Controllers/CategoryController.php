@@ -10,12 +10,18 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('user_id', auth()->id())->oldest()->paginate(5);
+        // Admin can get access to all categories.
+        $query = Category::query();
+        if (!auth()->user()->isAdmin()) {
+            $query->where('user_id', auth()->id());
+        }
+
+        $categories = $query->oldest()->paginate(5);
         return view('categories.index', compact('categories'));
     }
 
     public function create()
-    {
+    {                                                                                                                                                                                                                                                   
         return view('categories.create');
     }
 

@@ -51,7 +51,7 @@ class ProcessPostImage implements ShouldQueue
                 // In a real app, you'd use a library like Intervention Image here
             }
 
-            sleep(2); // Simulate work
+            sleep(10); // Simulate work
             
             Log::info("Job Completed: Processed images for Post ID {$this->post->id}");
             
@@ -69,4 +69,3 @@ class ProcessPostImage implements ShouldQueue
         Log::critical("Job Permanently Failed: Post ID {$this->post->id}. Reason: " . $exception->getMessage());
     }
 }
-        

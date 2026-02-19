@@ -18,7 +18,7 @@ class CategoryPolicy
 
     public function view(User $user, Category $category): bool
     {
-        // Admins can view any category
+        // Admins can view any category                             
         if ($user->isAdmin()) {
             return true;
         }
@@ -28,7 +28,7 @@ class CategoryPolicy
 
     public function create(User $user): bool
     {
-        return true;
+        return $user->isCustomer() || $user->isAdmin();
     }
 
     public function update(User $user, Category $category): bool

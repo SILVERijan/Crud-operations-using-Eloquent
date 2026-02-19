@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Category;
+use DB;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -16,7 +17,8 @@ class DashboardController extends Controller
         $stats = [
             'total_users' => User::count(),
             'total_posts' => Post::count(),
-            'total_categories' => Category::count(),                                                    
+            'total_categories' => Category::count(),   
+            'pending_jobs' => DB::table('jobs')->count(),                                               
         ];
 
         return view('admin.dashboard', compact('stats'));
@@ -66,5 +68,13 @@ class DashboardController extends Controller
     {
         $user->load(['posts', 'categories', 'roles']);
         return view('admin.user-detail', compact('user'));
+    }
+
+    public function jobs ()
+    {
+        $pendingJobs = DB::table('jobs') ->get();
+        $failedJobs = DB::table('failed_jobs') ->latest() ->get();
+
+        return view('admin.jobs', compact('pendingJobs', 'failedJobs'));
     }
 }

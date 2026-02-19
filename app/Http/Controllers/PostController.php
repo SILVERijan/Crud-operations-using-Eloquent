@@ -26,9 +26,14 @@ class PostController extends Controller
             ->paginate(10)
             ->appends($request->query());
 
-        // Get all categories for filtering (only those created by the user)
-        $categories = Category::where('user_id', auth()->id())->get();
-        $topCategories = Category::where('user_id', auth()->id())->topUsed(3)->get();
+        // Get all categories for filtering (only those created by the user, unless admin)
+        $categories = auth()->user()->isAdmin() 
+            ? Category::all() 
+            : Category::where('user_id', auth()->id())->get();
+
+        $topCategories = auth()->user()->isAdmin()
+            ? Category::topUsed(3)->get()
+            : Category::where('user_id', auth()->id())->topUsed(3)->get();
 
 
         return view('posts.index', compact('posts', 'categories', 'topCategories'));
@@ -61,7 +66,9 @@ class PostController extends Controller
     {
         $this->authorize('create', Post::class);
         
-        $categories = Category::where('user_id', auth()->id())->get();
+        $categories = auth()->user()->isAdmin() 
+            ? Category::all() 
+            : Category::where('user_id', auth()->id())->get();
 
         return view('posts.create', compact('categories'));
     }
@@ -122,7 +129,9 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
         
-        $categories = Category::where('user_id', auth()->id())->get();
+        $categories = auth()->user()->isAdmin() 
+            ? Category::all() 
+            : Category::where('user_id', auth()->id())->get();
 
         return view('posts.edit', compact('post', 'categories'));
     }
