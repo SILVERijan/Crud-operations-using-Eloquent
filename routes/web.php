@@ -32,6 +32,12 @@ Route::middleware('throttle:global')->group(function () {
         Route::get('/posts', [App\Http\Controllers\Admin\DashboardController::class, 'posts'])->name('posts');
         Route::get('/categories', [App\Http\Controllers\Admin\DashboardController::class, 'categories'])->name('categories');
         Route::get('/jobs', [App\Http\Controllers\Admin\DashboardController::class, 'jobs'])->name('jobs');
+        
+        // Batch Export Routes
+        Route::post('/posts/export-pdf', [App\Http\Controllers\Admin\PostBatchController::class, 'export'])->name('posts.export');
+        Route::get('/posts/export/{file}/download', [App\Http\Controllers\Admin\PostBatchController::class, 'download'])->name('posts.export.download');
+        Route::get('/exports', [App\Http\Controllers\Admin\PostBatchController::class, 'exports'])->name('exports');
+        Route::get('/batch/{batchId}', [App\Http\Controllers\Admin\PostBatchController::class, 'checkStatus'])->name('batch.status');
     });
 
     // CUSTOMER ROUTES - Form management only
