@@ -27,7 +27,9 @@ class PostRequest extends FormRequest
             'category_id' => [
                 'required',
                 \Illuminate\Validation\Rule::exists('categories', 'id')->where(function ($query) {
-                    $query->where('user_id', $this->user()->id);
+                    if (!$this->user()->isAdmin()) {
+                        $query->where('user_id', $this->user()->id);
+                    }
                 }),
             ],
             'published_at' => 'required|date',

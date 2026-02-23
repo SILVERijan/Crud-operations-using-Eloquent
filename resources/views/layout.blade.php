@@ -111,6 +111,11 @@
                         <li class="nav-item">
                             <a class="nav-link fw-medium {{ request()->routeIs('posts.liked') ? 'text-primary' : '' }}" href="{{ route('posts.liked') }}">Liked</a>
                         </li>
+                        @if(auth()->user()->isCustomer())
+                            <li class="nav-item">
+                                <a class="nav-link fw-medium {{ request()->routeIs('customer.forms.*') ? 'text-primary' : '' }}" href="{{ route('customer.forms.index') }}">My Forms</a>
+                            </li>
+                        @endif
                         <li class="nav-item">
                         @if(auth()->check() && auth()->user()->isAdmin())
                             <li class="nav-item">

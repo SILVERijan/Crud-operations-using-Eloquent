@@ -27,7 +27,9 @@ class StoreRequest extends FormRequest
             'category_id' => [
                 'required',
                 \Illuminate\Validation\Rule::exists('categories', 'id')->where(function ($query) {
-                    $query->where('user_id', auth()->id());
+                    if (!auth()->user()->isAdmin()) {
+                        $query->where('user_id', auth()->id());
+                    }
                 }),
             ],
 
